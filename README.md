@@ -113,3 +113,4 @@ variable "replicas" {
 ```
 
 After pushing the update, Cortex Cloud will re-evaluate and report that the drift has been resolved.
+ 
