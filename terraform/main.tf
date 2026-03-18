@@ -11,8 +11,7 @@ terraform {
 }
 
 provider "kubernetes" {
-  # The provider will automatically use the KUBECONFIG environment variable
-  # or the default ~/.kube/config file
+  config_path = "~/.kube/config"
 }
 
 resource "kubernetes_namespace" "demo" {
