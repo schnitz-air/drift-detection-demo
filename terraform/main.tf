@@ -5,7 +5,7 @@ terraform {
       version = "~> 2.23"
     }
   }
-  
+
   # For a real production setup, you would configure a remote backend here
   # backend "s3" {} or backend "gcs" {}
 }
