@@ -14,16 +14,39 @@ The setup deploys a simple Nginx web server (Namespace, Deployment, and Service)
 
 ## Setup Instructions
 
-### 1. Configure GitHub Secrets
+### 1. Configure AWS IAM and GitHub Secrets
 
-To allow GitHub Actions to authenticate with your Kubernetes cluster, you need to add your `kubeconfig` as a repository secret.
+To allow GitHub Actions to authenticate with your Amazon EKS cluster, you need to configure AWS IAM credentials and add your `kubeconfig` as a repository secret.
+
+#### A. Create an IAM User for GitHub Actions
+
+1. Create an IAM user in your AWS account (e.g., `github-actions-eks-deployer`).
+2. Create and attach an IAM policy that allows the user to describe the EKS cluster. Example policy:
+   ```json
+   {
+       "Version": "2012-10-17",
+       "Statement": [
+           {
+               "Effect": "Allow",
+               "Action": [
+                   "eks:DescribeCluster"
+               ],
+               "Resource": "arn:aws:eks:<region>:<account-id>:cluster/<cluster-name>"
+           }
+       ]
+   }
+   ```
+3. Generate an **Access Key ID** and **Secret Access Key** for this user.
+4. Add this user to the `aws-auth` ConfigMap in your EKS cluster (in the `kube-system` namespace) with `system:masters` permissions so it can create and manage resources.
+
+#### B. Add GitHub Secrets
 
 1. Go to your GitHub repository settings.
 2. Navigate to **Secrets and variables** > **Actions**.
-3. Click **New repository secret**.
-4. Name the secret `KUBECONFIG`.
-5. Paste the contents of your `~/.kube/config` file (or the specific kubeconfig for your cluster) into the value field.
-6. Click **Add secret**.
+3. Add the following secrets:
+   * `AWS_ACCESS_KEY_ID`: The Access Key ID generated in step A3.
+   * `AWS_SECRET_ACCESS_KEY`: The Secret Access Key generated in step A3.
+   * `KUBECONFIG`: The contents of your `~/.kube/config` file (or the specific kubeconfig for your cluster). You can extract just the current context using `kubectl config view --minify --flatten`.
 
 ### 2. Push the Code
 
