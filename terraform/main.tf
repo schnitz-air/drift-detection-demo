@@ -7,7 +7,7 @@ terraform {
   }
 
   # For a real production setup, you would configure a remote backend here
-  # backend "s3" {} or backend "gcs" {}
+  # backend "s3" {} or backend "gcs" {}  
 }
 
 provider "kubernetes" {
