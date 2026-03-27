@@ -4,6 +4,18 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "~> 2.23"
     }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.0"
+    }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.0"
+    }
   }
 
   # For a real production setup, you would configure a remote backend here
@@ -12,6 +24,19 @@ terraform {
 
 provider "kubernetes" {
   config_path = "~/.kube/config"
+}
+
+provider "aws" {
+  region = "us-east-1"
+}
+
+provider "google" {
+  project = var.gcp_project_id
+  region  = "us-central1"
+}
+
+provider "azurerm" {
+  features {}
 }
 
 resource "kubernetes_namespace" "demo" {
