@@ -12,3 +12,17 @@ Resources:
     Properties:
       VpcId: !Ref MyVPC
       CidrBlock: 10.0.1.0/24
+  MySecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Enable HTTP access
+      VpcId: !Ref MyVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+  MyS3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub 'cf-demo-bucket-${AWS::AccountId}-${AWS::Region}'
