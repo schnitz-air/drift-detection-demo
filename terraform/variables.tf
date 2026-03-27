@@ -1,9 +1,3 @@
-variable "gcp_project_id" {
-  description = "The GCP project ID"
-  type        = string
-  default     = "my-project-id"
-}
-
 variable "namespace" {
   description = "The Kubernetes namespace to deploy the demo resources into"
   type        = string
