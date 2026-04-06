@@ -1,6 +1,36 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'AWS CloudFormation Template for a VPC'
 Resources:
+  DriftDemoVPC1:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: 10.1.0.0/16
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: 'false'
+      Tags:
+        - Key: Name
+          Value: drift-demo-vpc-1
+  DriftDemoVPC2:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: 10.2.0.0/16
+      EnableDnsSupport: 'false'
+      EnableDnsHostnames: 'false'
+      InstanceTenancy: dedicated
+      Tags:
+        - Key: Name
+          Value: drift-demo-vpc-2
+  DriftDemoVPC3:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: 10.3.0.0/16
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: 'true'
+      Tags:
+        - Key: Name
+          Value: drift-demo-vpc-3
+        - Key: Environment
+          Value: dev
   MyVPC:
     Type: 'AWS::EC2::VPC'
     Properties:
