@@ -5,13 +5,6 @@ resource "aws_s3_bucket" "example" {
   }
 }
 
-resource "aws_instance" "web" {
-  ami           = "ami-0c55b159cbfafe1f0"
-  instance_type = "t2.micro"
-  tags = {
-    yor_trace = "b02be4af-285e-4309-afee-7ef4e4d31171"
-  }
-}
 
 resource "aws_vpc" "main" {
   cidr_block           = "10.1.0.0/16"
