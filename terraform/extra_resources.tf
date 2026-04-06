@@ -7,9 +7,7 @@ resource "aws_s3_bucket" "example" {
 
 
 resource "aws_vpc" "main" {
-  cidr_block           = "10.1.0.0/16"
-  enable_dns_hostnames = true
-  enable_dns_support   = true
+  cidr_block = "10.1.0.0/16"
 
   tags = {
     Name      = "terraform-aws-vpc"
@@ -88,13 +86,13 @@ resource "aws_security_group" "web_sg" {
   }
 }
 
-resource "aws_instance" "web" {
-  ami                    = "ami-0c55b159cbfafe1f0"
-  instance_type          = "t2.micro"
-  subnet_id              = aws_subnet.public.id
-  vpc_security_group_ids = [aws_security_group.web_sg.id]
+data "aws_ami" "amazon_linux_2" {
+  most_recent = true
+  owners      = ["amazon"]
 
-  tags = {
-    Name = "terraform-aws-web-instance"
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
   }
 }
+
