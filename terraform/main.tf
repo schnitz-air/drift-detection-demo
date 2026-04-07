@@ -1,101 +1,45 @@
-terraform {
-  required_providers {
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "~> 2.23"
-    }
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
-
-  # For a real production setup, you would configure a remote backend here
-  # backend "s3" {} or backend "gcs" {}  
-}
-
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
 provider "aws" {
   region = "us-east-1"
 }
 
+resource "aws_vpc" "main" {
+  cidr_block = "192.168.2.0/24"
 
-resource "kubernetes_namespace" "demo" {
-  metadata {
-    name = var.namespace
-    labels = {
-      "app.kubernetes.io/managed-by" = "terraform"
-      "demo"                         = "cortex-drift-detection"
-    }
+  tags = {
+    Name = "Drift-Demo-BOT"
   }
 }
 
-resource "kubernetes_deployment" "nginx" {
-  metadata {
-    name      = "nginx-deployment"
-    namespace = kubernetes_namespace.demo.metadata[0].name
-    labels = {
-      app = "nginx"
-    }
-  }
+resource "aws_s3_bucket" "drift_demo" {
+  bucket = "aschnitzer-drift-detection-bot"
 
-  spec {
-    replicas = var.replicas
-
-    selector {
-      match_labels = {
-        app = "nginx"
-      }
-    }
-
-    template {
-      metadata {
-        labels = {
-          app = "nginx"
-        }
-      }
-
-      spec {
-        container {
-          image = "nginx:1.25.3"
-          name  = "nginx"
-
-          port {
-            container_port = 80
-          }
-
-          resources {
-            limits = {
-              cpu    = "0.5"
-              memory = "512Mi"
-            }
-            requests = {
-              cpu    = "250m"
-              memory = "50Mi"
-            }
-          }
-        }
-      }
-    }
+  tags = {
+    Name = "Drift-Demo-BOT"
   }
 }
 
-resource "kubernetes_service" "nginx" {
-  metadata {
-    name      = "nginx-service"
-    namespace = kubernetes_namespace.demo.metadata[0].name
+resource "aws_s3_bucket_ownership_controls" "drift_demo" {
+  bucket = aws_s3_bucket.drift_demo.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
   }
-  spec {
-    selector = {
-      app = kubernetes_deployment.nginx.metadata[0].labels.app
-    }
-    port {
-      port        = 80
-      target_port = 80
-    }
-    type = "ClusterIP"
-  }
+}
+
+resource "aws_s3_bucket_public_access_block" "drift_demo" {
+  bucket = aws_s3_bucket.drift_demo.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+resource "aws_s3_bucket_acl" "drift_demo" {
+  depends_on = [
+    aws_s3_bucket_ownership_controls.drift_demo,
+    aws_s3_bucket_public_access_block.drift_demo,
+  ]
+
+  bucket = aws_s3_bucket.drift_demo.id
+  acl    = "public-read"
 }
