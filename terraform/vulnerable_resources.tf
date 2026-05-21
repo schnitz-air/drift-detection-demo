@@ -27,7 +27,8 @@ resource "aws_security_group" "vulnerable_sg" {
   }
 
   tags = {
-    Name = "Vulnerable-SG"
+    Name      = "Vulnerable-SG"
+    yor_trace = "783df761-9ba5-405f-a086-9bb8e46c4f7f"
   }
 }
 
@@ -45,6 +46,9 @@ resource "aws_iam_policy" "vulnerable_policy" {
       },
     ]
   })
+  tags = {
+    yor_trace = "d76d89bb-1cd7-4e4e-b167-eed21994f0ef"
+  }
 }
 
 resource "aws_sqs_queue" "vulnerable_queue" {
@@ -59,7 +63,8 @@ resource "aws_sqs_queue" "vulnerable_queue" {
   sqs_managed_sse_enabled = false
 
   tags = {
-    Name = "Vulnerable-Queue"
+    Name      = "Vulnerable-Queue"
+    yor_trace = "7bd1a2d0-53ef-471d-b37c-8dbcea37b09d"
   }
 }
 

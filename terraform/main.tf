@@ -6,7 +6,8 @@ resource "aws_vpc" "main" {
   cidr_block = "192.168.2.0/24"
 
   tags = {
-    Name = "Drift-Demo-BOT"
+    Name      = "Drift-Demo-BOT"
+    yor_trace = "9c054a45-33a0-45fa-bd7f-a02e541d4322"
   }
 }
 
@@ -14,7 +15,8 @@ resource "aws_s3_bucket" "drift_demo" {
   bucket = "aschnitzer-drift-detection-bot"
 
   tags = {
-    Name = "Drift-Demo-BOT"
+    Name      = "Drift-Demo-BOT"
+    yor_trace = "4c437bd6-7650-425b-8129-b8d30c379edb"
   }
 }
 
